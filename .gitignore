@@ -1,0 +1,29 @@
+# Datos (no versionar el dataset)
+data/*
+!data/.gitkeep
+
+# Artefactos de modelos
+*.pkl
+*.joblib
+*.model
+
+# Figuras generadas
+reports/figures/*
+!reports/figures/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Sistema
+.DS_Store
