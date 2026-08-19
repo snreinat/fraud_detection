@@ -29,20 +29,25 @@ CAT_HIGH = ["j"]                        # alta cardinalidad → target encoding
     - Numéricas: imputación por mediana.
     - Cat. baja cardinalidad: imputación + one-hot (agrupa las raras).
     - Cat. alta cardinalidad (j): target encoding con validación cruzada.
-    """
-def build_preprocessor():
-    num = SimpleImputer(strategy="median")
+    Preprocesador ajustado solo en train. num/low/high permiten variar las
+    columnas (p. ej. para un ablation)."""
 
+def build_preprocessor(num=None, low=None, high=None):
+
+    num  = NUM_FEATURES if num  is None else num
+    low  = CAT_LOW      if low  is None else low
+    high = CAT_HIGH     if high is None else high
+
+    num_t = SimpleImputer(strategy="median")
     cat_low = Pipeline([
         ("imput", SimpleImputer(strategy="most_frequent")),
         ("onehot", OneHotEncoder(handle_unknown="infrequent_if_exist",
                                  min_frequency=0.01, sparse_output=False)),
     ])
-
-    cat_high = TargetEncoder(target_type="binary")
+    cat_high = TargetEncoder(target_type="binary", random_state=42)
 
     return ColumnTransformer([
-        ("num", num, NUM_FEATURES),
-        ("cat_low", cat_low, CAT_LOW),
-        ("cat_high", cat_high, CAT_HIGH),
+        ("num", num_t, num),
+        ("cat_low", cat_low, low),
+        ("cat_high", cat_high, high),
     ])

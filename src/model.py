@@ -36,7 +36,7 @@ def build_xgb(scale_pos_weight=None, params=None):
 
 # Se guardan los parametros que se obtuvieron con Optuna para XGBoost, para poder reproducir el modelo final sin necesidad de reoptimizar.
 BEST_XGB_PARAMS = {
-    "n_estimators": 620, "learning_rate": 0.0301, "max_depth": 4,
-    "subsample": 0.690, "colsample_bytree": 0.995,
-    "min_child_weight": 7, "gamma": 0.926, "reg_lambda": 0.339,
+    "n_estimators": 677, "learning_rate": 0.037, "max_depth": 4,
+    "subsample": 0.811, "colsample_bytree": 0.872,
+    "min_child_weight": 6, "gamma": 2.757, "reg_lambda": 2.515,
 }

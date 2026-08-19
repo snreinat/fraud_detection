@@ -2,7 +2,10 @@
 
 import pandas as pd
 
-RAW_PATH = "data/dataset.csv"
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RAW_PATH = PROJECT_ROOT / "data" / "dataset.csv"
 
 #Carga del CSV crudo parseando la fecha.
 def load_raw(path: str = RAW_PATH) -> pd.DataFrame:
