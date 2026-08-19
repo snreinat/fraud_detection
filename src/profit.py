@@ -57,3 +57,13 @@ def reject_all_profit(y_true, amount):
 def max_possible_profit(y_true, amount):
     y_true = np.asarray(y_true)
     return total_profit(y_true, amount, y_true == 0)
+
+#Traduce una ganancia en pesos a una escala 0-1
+def captured_margin(profit, y_true, amount, floor=None):
+    if floor is None:
+        floor = approve_all_profit(y_true, amount)
+    ceiling = max_possible_profit(y_true, amount)
+    span = ceiling - floor
+    if span <= 0:
+        return 0.0
+    return float((profit - floor) / span)

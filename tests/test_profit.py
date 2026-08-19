@@ -3,7 +3,7 @@ import numpy as np
 from src.profit import (
     BREAK_EVEN_THRESHOLD, transaction_value, total_profit,
     profit_from_threshold, find_best_threshold,
-    approve_all_profit, reject_all_profit, max_possible_profit,
+    approve_all_profit, reject_all_profit, max_possible_profit, captured_margin,
 )
 
 
@@ -41,3 +41,21 @@ def test_mejor_umbral_separacion_perfecta():
     p = np.array([0.1, 0.1, 0.9, 0.9])
     _, mejor_ganancia, _, _ = find_best_threshold(y, amt, p)
     assert mejor_ganancia == 50.0
+
+
+def test_captured_margin_oraculo_da_1_y_piso_da_0():
+    y = [0, 1, 0]
+    amt = [100.0, 100.0, 40.0]
+    piso = approve_all_profit(y, amt)
+    techo = max_possible_profit(y, amt)
+    assert abs(captured_margin(techo, y, amt) - 1.0) < 1e-9
+    assert abs(captured_margin(piso, y, amt) - 0.0) < 1e-9
+
+
+def test_captured_margin_punto_medio():
+    y = [0, 1, 0]
+    amt = [100.0, 100.0, 40.0]
+    piso = approve_all_profit(y, amt)
+    techo = max_possible_profit(y, amt)
+    medio = (piso + techo) / 2
+    assert abs(captured_margin(medio, y, amt) - 0.5) < 1e-9

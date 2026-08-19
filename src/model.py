@@ -9,10 +9,10 @@ from sklearn.ensemble import RandomForestClassifier
 
 RANDOM_STATE = 42
 
-"""Baseline: preprocesamiento + escalado + regresión logística.
-    class_weight='balanced' compensa el desbalance del 5%."""
 
 def build_logistic():
+    """Baseline: preprocesamiento + escalado + regresión logística.
+    class_weight='balanced' compensa el desbalance del 5%."""
     return Pipeline([
         ("pre", build_preprocessor()),
         ("scaler", StandardScaler()),
@@ -22,10 +22,9 @@ def build_logistic():
 
 
 
-"""XGBoost: preprocesamiento + XGBoost. Sin escalado (los árboles son invariantes a la escala).
-    scale_pos_weight compensa el desbalance.`params` permite pasar hiperparámetros a medida (p. ej. los que encuentra Optuna)"""
 def build_xgb(scale_pos_weight=None, params=None):
-
+    """XGBoost: preprocesamiento + XGBoost. Sin escalado (los árboles son invariantes a la escala).
+    scale_pos_weight compensa el desbalance.`params` permite pasar hiperparámetros a medida (p. ej. los que encuentra Optuna)"""
     base = dict(n_estimators=400, learning_rate=0.05, max_depth=6,
                 subsample=0.8, colsample_bytree=0.8,
                 eval_metric="aucpr", random_state=RANDOM_STATE, n_jobs=1)
@@ -45,8 +44,8 @@ BEST_XGB_PARAMS = {
 
 
 
-"""LightGBM (otro gradient boosting) para comparación."""
 def build_lgbm(scale_pos_weight=None, params=None):
+    """LightGBM (otro gradient boosting) para comparación."""
     base = dict(n_estimators=400, learning_rate=0.05, num_leaves=31, bagging_freq=1,
                 random_state=RANDOM_STATE, n_jobs=1, verbose=-1)
     if params:
@@ -55,10 +54,17 @@ def build_lgbm(scale_pos_weight=None, params=None):
     return Pipeline([("pre", build_preprocessor()),
                      ("clf", LGBMClassifier(**base))])
 
+# Se guardan los parametros que se obtuvieron con Optuna para LightGBM, para poder reproducir el modelo final sin necesidad de reoptimizar.
+BEST_LGBM_PARAMS = {
+    'n_estimators': 621, 'learning_rate': 0.029494148336943186, 'num_leaves': 16, 
+    'max_depth': 12, 'min_child_samples': 23, 'feature_fraction': 0.7826173426603851, 
+    'bagging_fraction': 0.8099926423362572, 'reg_lambda': 0.10243918246367029
+}
 
 
-"""Random Forest (bagging) para comparación."""
+
 def build_rf():
+    """Random Forest (bagging) para comparación."""
     return Pipeline([
         ("pre", build_preprocessor()),
         ("clf", RandomForestClassifier(n_estimators=300, class_weight="balanced",
