@@ -34,11 +34,8 @@ def profit_from_threshold(y_true, amount, p_fraud, threshold=BREAK_EVEN_THRESHOL
     p_fraud = np.asarray(p_fraud, dtype=float)
     return total_profit(y_true, amount, p_fraud <= threshold)
 
-
+#Busca el umbral que maximiza la ganancia sobre una grilla. Devuelve (mejor_umbral, mejor_ganancia, grid, ganancias)
 def find_best_threshold(y_true, amount, p_fraud, grid=None):
-    """Busca el umbral que maximiza la ganancia sobre una grilla.
-    Elegir SIEMPRE sobre validación, no sobre test.
-    Devuelve (mejor_umbral, mejor_ganancia, grid, ganancias)."""
     if grid is None:
         grid = np.linspace(0.0, 1.0, 101)
     grid = np.asarray(grid, dtype=float)
@@ -46,19 +43,17 @@ def find_best_threshold(y_true, amount, p_fraud, grid=None):
     i = int(np.argmax(profits))
     return float(grid[i]), float(profits[i]), grid, profits
 
-
+#Baseline: aprobar todas las transacciones.
 def approve_all_profit(y_true, amount):
-    """Baseline: aprobar todas las transacciones."""
     n = len(np.asarray(y_true))
     return total_profit(y_true, amount, np.ones(n, dtype=bool))
 
 
+#Baseline: rechazar todas (siempre 0).
 def reject_all_profit(y_true, amount):
-    """Baseline: rechazar todas (siempre 0)."""
     return 0.0
 
-
+#Techo teórico: aprobar solo las legítimas.
 def max_possible_profit(y_true, amount):
-    """Techo teórico: aprobar solo las legítimas."""
     y_true = np.asarray(y_true)
     return total_profit(y_true, amount, y_true == 0)
