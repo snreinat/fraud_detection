@@ -8,10 +8,11 @@ NUM_FEATURES = ["b", "c", "d", "e", "f", "h", "l", "m", "monto", "score"]
 CAT_LOW  = ["a", "g", "n", "o", "p"]   # baja cardinalidad → one-hot
 CAT_HIGH = ["j"]                        # alta cardinalidad → target encoding
 
-"""Split temporal (out-of-time): ordena por fecha y corta en el tiempo.
+
+def temporal_split(df, date_col="fecha", train_frac=0.7, val_frac=0.15):
+    """Split temporal (out-of-time): ordena por fecha y corta en el tiempo.
     Entrena con lo viejo, evalúa con lo nuevo (simula producción).
     Devuelve (train, val, test)."""
-def temporal_split(df, date_col="fecha", train_frac=0.7, val_frac=0.15):
     df_ordenado = df.sort_values(date_col)
     n = len(df_ordenado)
     n_train = int(n * train_frac)
@@ -22,15 +23,15 @@ def temporal_split(df, date_col="fecha", train_frac=0.7, val_frac=0.15):
     return train, val, test
 
 
-"""Preprocesador que se ajusta SOLO en train (evita fugas).
+
+
+def build_preprocessor(num=None, low=None, high=None):
+    """Preprocesador que se ajusta SOLO en train (evita fugas).
     - Numéricas: imputación por mediana.
     - Cat. baja cardinalidad: imputación + one-hot (agrupa las raras).
     - Cat. alta cardinalidad (j): target encoding con validación cruzada.
     Preprocesador ajustado solo en train. num/low/high permiten variar las
     columnas (p. ej. para  ablation)."""
-
-def build_preprocessor(num=None, low=None, high=None):
-
     num  = NUM_FEATURES if num  is None else num
     low  = CAT_LOW      if low  is None else low
     high = CAT_HIGH     if high is None else high

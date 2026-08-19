@@ -23,15 +23,15 @@ Evaluación sobre el conjunto de test **out-of-time**, utilizando el umbral sele
 | Rechazar todo | $0 |
 | Aprobar todo | $138.456 |
 | Baseline basado en `score` | $159.514 |
-| **XGBoost + calibración + optimización de umbral** | **$172.723** |
+| **XGBoost + Platt scaling + umbral optimizado** | **$173.489** |
 | Máximo posible (oráculo) | $217.836 |
 
 Bajo este escenario, el modelo incrementa la ganancia simulada aproximadamente en:
 
-- **$34.000 frente a aprobar todas las transacciones**.
-- **$13.000 frente al baseline basado en la variable `score`**.
+- **$35.033 frente a aprobar todas las transacciones**.
+- **$13.975 frente al baseline basado en la variable `score`**.
 
-Como referencia adicional, la ganancia obtenida representa aproximadamente el **79% del límite superior teórico** dado por un oráculo que conoce previamente la etiqueta real de cada transacción.
+Como referencia adicional, la ganancia obtenida por el modelo representa aproximadamente el *79,6%* de la ganancia máxima teórica, definida por un oráculo que conoce de antemano la etiqueta real de cada transacción.
  
 ## Estructura del repositorio
 
@@ -206,10 +206,17 @@ Esto evita que información futura influya en la construcción de las variables 
 
 ### 4. Modelado
 
-Se consideran dos modelos principales:
+Se comparan distintas familias de modelos:
 
-- **Regresión logística**, como baseline interpretable.
-- **XGBoost**, como modelo no lineal para datos tabulares.
+- **Regresión logística**, como baseline lineal interpretable.
+- **Random Forest**.
+- **XGBoost**.
+- **LightGBM**.
+- **SVM con kernel RBF**.
+- **MLP (red neuronal)**.
+
+Los mejores resultados de ranking se obtienen con los modelos de gradient boosting. 
+XGBoost se selecciona como modelo final por su desempeño, estabilidad y su integración con las etapas posteriores de calibración, optimización del umbral e interpretabilidad.
 
 El desbalance de clases se aborda mediante ponderación durante el entrenamiento, evitando modificar artificialmente la distribución observada mediante oversampling sintético.
 
