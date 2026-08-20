@@ -17,9 +17,12 @@ DROP_COLS = ["k"]
 
 
 def clean(df):
-    """Limpieza estructural sin aprender del train.
-    Descarta ruido y trata el vacío de 'o' como categoría propia."""
+    """Limpieza base: descarta columnas sin señal y trata faltantes informativos."""
     df = df.copy()
-    df = df.drop(columns=DROP_COLS)
-    df["o"] = df["o"].fillna("VACIO")  
+    df = df.drop(columns=DROP_COLS)          # descarta 'k' (ruido)
+    df["o"] = df["o"].fillna("VACIO")        # el vacío de 'o' como categoría propia
+
+    df["fecha"] = pd.to_datetime(df["fecha"])  # asegura tipo fecha
+    df["hora"] = df["fecha"].dt.hour           # señal temporal (nueva feature)
+
     return df

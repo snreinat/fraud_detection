@@ -16,22 +16,22 @@ Por tanto, la métrica central del proyecto es la **ganancia neta simulada**, mi
 
 ## Resultado principal
 
-Evaluación sobre el conjunto de test **out-of-time**, utilizando el umbral seleccionado previamente sobre el conjunto de validación:
+Evaluación sobre el conjunto de test **out-of-time**, con el umbral seleccionado en validación:
 
-| Estrategia | Ganancia simulada en test |
-|---|---:|
-| Rechazar todo | $0 |
-| Aprobar todo | $138.456 |
-| Baseline basado en `score` | $159.514 |
-| **XGBoost + Platt scaling + umbral optimizado** | **$173.489** |
-| Máximo posible (oráculo) | $217.836 |
+| Estrategia | Ganancia (test) | Margen capturado |
+|---|---:|---:|
+| Rechazar todo | $0 | — |
+| Aprobar todo | $138.456 | 0% |
+| Baseline basado en `score` | $159.514 | 26,5% |
+| **XGBoost + Platt + umbral** | **$174.237** | **45,1%** |
+| Máximo posible (oráculo) | $217.836 | 100% |
 
-Bajo este escenario, el modelo incrementa la ganancia simulada aproximadamente en:
+Aprobar todas las transacciones ya rinde $138.456 (el 63,6% del máximo): la empresa no parte de cero. Por eso el aporte del modelo se mide como lo que **agrega sobre ese piso**:
 
-- **$35.033 frente a aprobar todas las transacciones**.
-- **$13.975 frente al baseline basado en la variable `score`**.
+- **+$35.781 frente a aprobar todas las transacciones**.
+- **+$14.723 frente al baseline basado en `score`** (el resultado más relevante).
 
-Como referencia adicional, la ganancia obtenida por el modelo representa aproximadamente el *79,6%* de la ganancia máxima teórica, definida por un oráculo que conoce de antemano la etiqueta real de cada transacción.
+El **margen capturado** resume esa contribución: el modelo recupera el 45,1% de la brecha entre no hacer nada (aprobar todo) y el óptimo teórico (oráculo), frente al 26,5% que recupera el score actual.
  
 ## Estructura del repositorio
 

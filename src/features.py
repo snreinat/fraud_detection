@@ -4,7 +4,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, TargetEncoder
 
-NUM_FEATURES = ["b", "c", "d", "e", "f", "h", "l", "m", "monto", "score"]
+NUM_FEATURES = ["b", "c", "d", "e", "f", "h", "l", "m", "monto", "score", "hora"]
 CAT_LOW  = ["a", "g", "n", "o", "p"]   # baja cardinalidad → one-hot
 CAT_HIGH = ["j"]                        # alta cardinalidad → target encoding
 
